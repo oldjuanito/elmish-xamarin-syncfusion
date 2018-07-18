@@ -6,11 +6,12 @@ module SfCalendarExtension =
 
     open Xamarin.Forms
 
-    //let MapHasScrollEnabledAttribKey = AttributeKey "Map_HasScrollEnabled"
+    //Step 1
+    let SfCalendarMinDateAttribKey = AttributeKey "SfCalendar_MinDate"
 
     type View with
         /// Describes a Map in the view
-        static member inline SfCalendar(
+        static member inline SfCalendar(?minDate: System.DateTime, //Step 2
                                  // inherited attributes common to all views
                                  ?horizontalOptions, ?verticalOptions, ?margin, ?gestureRecognizers, ?anchorX, ?anchorY, ?backgroundColor, 
                                  ?heightRequest, ?inputTransparent, ?isEnabled, ?isVisible, ?minimumHeightRequest, ?minimumWidthRequest, ?opacity,
@@ -19,7 +20,7 @@ module SfCalendarExtension =
 
             // Count the number of additional attributes
             let attribCount = 0
-            //let attribCount = match pins with Some _ -> attribCount + 1 | None -> attribCount
+            let attribCount = match minDate with Some _ -> attribCount + 1 | None -> attribCount //Step 3
 
             // Count and populate the inherited attributes
             let attribs =
@@ -32,13 +33,15 @@ module SfCalendarExtension =
                                ?translationX=translationX, ?translationY=translationY, ?widthRequest=widthRequest,
                                ?resources=resources, ?styles=styles, ?styleSheets=styleSheets, ?classId=classId, ?styleId=styleId)
 
+
             // Add our own attributes. They must have unique names which must match the names below.
-            //match pins with None -> () | Some v -> attribs.Add(MapPinsAttribKey, v)
+            match minDate with None -> () | Some v -> attribs.Add(SfCalendarMinDateAttribKey, v) //Step 4
 
             // The update method
             let update (prevOpt: ViewElement voption) (source: ViewElement) (target: Syncfusion.SfCalendar.XForms.SfCalendar) =
                 View.UpdateView(prevOpt, source, target)
-                //source.UpdatePrimitive(prevOpt, target, MapHasScrollEnabledAttribKey, (fun target v -> target.HasScrollEnabled <- v))
+                //Step 5
+                source.UpdatePrimitive(prevOpt, target, SfCalendarMinDateAttribKey, (fun target v -> target.MinDate <- v))
 
             let create () = new Syncfusion.SfCalendar.XForms.SfCalendar()
             // The element

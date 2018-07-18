@@ -46,7 +46,7 @@ module App =
         View.ContentPage(
           content = View.StackLayout(padding = 20.0, verticalOptions = LayoutOptions.Center,
             children = [ 
-                View.SfCalendar()
+                View.SfCalendar(minDate = new System.DateTime(2018,07,19 + model.Count))
                 View.Label(text = sprintf "%d" model.Count, horizontalOptions = LayoutOptions.Center, fontSize = "Large")
                 View.Button(text = "Incrementoo", command = (fun () -> dispatch Increment))
                 View.Button(text = "Decremento", command = (fun () -> dispatch Decrement))
