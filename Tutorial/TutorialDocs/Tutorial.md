@@ -93,11 +93,17 @@ static member inline SfMaskedEdit(
 
 9. Adding an event
 
+        ```fsharp
  match valueChg with 
             | None -> () 
             | Some v -> 
                 let v2 = new Syncfusion.XForms.MaskedEdit.ValueChangedEventHandler(fun _sender args -> v args)
                 attribs.Add(SfValueChangedAttribKey, v2)
-                
+        ```
+        ```fsharp
                 source.UpdateEvent(prevOpt, SfValueChangedAttribKey, target.ValueChanged)
-View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , valueChg = (fun _ -> dispatch (SetStep 1)) , horizontalOptions = LayoutOptions.CenterAndExpand)
+        ```
+        ```fsharp
+View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , valueChg = (fun _ -> dispatch (SetStep 1)) , horizontalOptions = 
+         LayoutOptions.CenterAndExpand)
+        ```
