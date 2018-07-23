@@ -23,11 +23,13 @@ The steps are described in https://help.syncfusion.com/xamarin/sfmaskededit/gett
 3. Set the namespace namespace SqueakyApp
 4. add an auto-opened module named SfMaskedEditExtension
 5. Open namespaces:
-    1.     open Elmish.XamarinForms.DynamicViews
-    2.     open Xamarin.Forms
+    ```fsharp
+    open Elmish.XamarinForms.DynamicViews
+    open Xamarin.Forms
+    ```
 6. Add the following Type inside that module called "View"
 7. Add a static memebr function called "SfMaskedEdit" with the following minimum base code to have the control showing. All this code is for the base attibutes of any xamarin forms view, but referencing the .net class of the control we want to use which is SfMaskedEdit:
-`
+```fsharp
 static member inline SfMaskedEdit(
                                  // inherited attributes common to all views
                                  ?horizontalOptions, ?verticalOptions, ?margin, ?gestureRecognizers, ?anchorX, ?anchorY, ?backgroundColor, 
@@ -56,32 +58,34 @@ static member inline SfMaskedEdit(
             let create () = new Syncfusion.XForms.MaskedEdit.SfMaskedEdit()
             // The element
             ViewElement.Create<Syncfusion.XForms.MaskedEdit.SfMaskedEdit>(create, update, attribs)
-`
+```
 8. Add attribute wrappers for the mask and value proretery of the control:
     1. Add the keys:
-`    
-    let SfMaskAttribKey = AttributeKey "SfMaskAttribKey"
-    let SfValueAttribKey = AttributeKey "SfValueAttribKey"
-` 
+        ```fsharp
+            let SfMaskAttribKey = AttributeKey "SfMaskAttribKey"
+            let SfValueAttribKey = AttributeKey "SfValueAttribKey"
+        ``` 
     2. Add them as parameters to the SfMaskedEdit function:
-`
-    SfMaskedEdit(?mask: string, ?value: string,
-`
+        ```fsharp
+            SfMaskedEdit(?mask: string, ?value: string,
+        ```
     3. Count them in the attributes
-`
-let attribCount = match mask with Some _ -> attribCount + 1 | None -> attribCount 
-let attribCount = match value with Some _ -> attribCount + 1 | None -> attribCount 
-`
+        ```fsharp
+        let attribCount = match mask with Some _ -> attribCount + 1 | None -> attribCount 
+        let attribCount = match value with Some _ -> attribCount + 1 | None -> attribCount 
+        ```
     4. Add them to the attributes bag:
-`
-    match mask with None -> () | Some v -> attribs.Add(SfMaskAttribKey, v) 
-    match value with None -> () | Some v -> attribs.Add(SfValueAttribKey, v) 
-`
+        ```fsharp
+            match mask with None -> () | Some v -> attribs.Add(SfMaskAttribKey, v) 
+            match value with None -> () | Some v -> attribs.Add(SfValueAttribKey, v) 
+        ```
+
     5. Under the update function, add one line per each attribute to wire up the changes to those props:
-`
-    source.UpdatePrimitive(prevOpt, target, SfMaskAttribKey, (fun target v -> target.Mask <- v))
-    source.UpdatePrimitive(prevOpt, target, SfValueAttribKey, (fun target v -> target.Value <- v))
-`
+   
+        ```fsharp
+            source.UpdatePrimitive(prevOpt, target, SfMaskAttribKey, (fun target v -> target.Mask <- v))
+            source.UpdatePrimitive(prevOpt, target, SfValueAttribKey, (fun target v -> target.Value <- v))
+        ```
 
 1.  In SqueakyApp.fs, add `View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , horizontalOptions = LayoutOptions.CenterAndExpand)` right before `View.Label...`
 2.  Debug the Android (or iOS app)
