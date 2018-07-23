@@ -89,3 +89,15 @@ static member inline SfMaskedEdit(
 
 1.  In SqueakyApp.fs, add `View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , horizontalOptions = LayoutOptions.CenterAndExpand)` right before `View.Label...`
 2.  Debug the Android (or iOS app)
+
+
+9. Adding an event
+
+ match valueChg with 
+            | None -> () 
+            | Some v -> 
+                let v2 = new Syncfusion.XForms.MaskedEdit.ValueChangedEventHandler(fun _sender args -> v args)
+                attribs.Add(SfValueChangedAttribKey, v2)
+                
+                source.UpdateEvent(prevOpt, SfValueChangedAttribKey, target.ValueChanged)
+View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , valueChg = (fun _ -> dispatch (SetStep 1)) , horizontalOptions = LayoutOptions.CenterAndExpand)

@@ -46,7 +46,7 @@ module App =
         View.ContentPage(
           content = View.StackLayout(padding = 20.0, verticalOptions = LayoutOptions.Center,
             children = [ 
-                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , horizontalOptions = LayoutOptions.CenterAndExpand)
+                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , valueChg = (fun _ -> dispatch (SetStep 1)) , horizontalOptions = LayoutOptions.CenterAndExpand)
                 View.Label(text = sprintf "%d" model.Count, horizontalOptions = LayoutOptions.Center, fontSize = "Large")
                 View.Button(text = "Increment", command = (fun () -> dispatch Increment), horizontalOptions = LayoutOptions.Center)
                 View.Button(text = "Decrement", command = (fun () -> dispatch Decrement), horizontalOptions = LayoutOptions.Center)
