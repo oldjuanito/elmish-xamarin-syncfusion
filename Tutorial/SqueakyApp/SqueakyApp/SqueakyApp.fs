@@ -19,6 +19,7 @@ module App =
         | SetStep of int
         | TimerToggled of bool
         | TimedTick
+        | SetCounter of int
 
     let initModel = { Count = 0; Step = 1; TimerOn=false }
 
@@ -34,6 +35,7 @@ module App =
         | Increment -> { model with Count = model.Count + model.Step }, Cmd.none
         | Decrement -> { model with Count = model.Count - model.Step }, Cmd.none
         | Reset -> init ()
+        | SetCounter n -> { model with Count = n }, Cmd.none
         | SetStep n -> { model with Step = n }, Cmd.none
         | TimerToggled on -> { model with TimerOn = on }, (if on then timerCmd else Cmd.none)
         | TimedTick -> 
@@ -43,10 +45,18 @@ module App =
                 model, Cmd.none
 
     let view (model: Model) dispatch =
+        let toN s = 
+            match System.Int32.TryParse s with
+            | true, i -> Some i
+            | _ -> None
         View.ContentPage(
           content = View.StackLayout(padding = 20.0, verticalOptions = LayoutOptions.Center,
             children = [ 
-                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000000" , valueChg = (fun _ -> dispatch (SetStep 1)) , horizontalOptions = LayoutOptions.CenterAndExpand)
+                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000,000" , 
+                    valueChg = (fun arg -> 
+                        toN (arg.Value.ToString()) 
+                        |> Option.iter (SetCounter >> dispatch)) 
+                        , horizontalOptions = LayoutOptions.CenterAndExpand)
                 View.Label(text = sprintf "%d" model.Count, horizontalOptions = LayoutOptions.Center, fontSize = "Large")
                 View.Button(text = "Increment", command = (fun () -> dispatch Increment), horizontalOptions = LayoutOptions.Center)
                 View.Button(text = "Decrement", command = (fun () -> dispatch Decrement), horizontalOptions = LayoutOptions.Center)

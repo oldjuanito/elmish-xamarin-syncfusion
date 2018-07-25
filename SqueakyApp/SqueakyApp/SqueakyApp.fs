@@ -19,6 +19,7 @@ module App =
         | SetStep of int
         | TimerToggled of bool
         | TimedTick
+        | SetCounter of int
 
     let initModel = { Count = 0; Step = 1; TimerOn=false }
 
@@ -34,6 +35,7 @@ module App =
         | Increment -> { model with Count = model.Count + model.Step }, Cmd.none
         | Decrement -> { model with Count = model.Count - model.Step }, Cmd.none
         | Reset -> init ()
+        | SetCounter n -> { model with Count = n }, Cmd.none
         | SetStep n -> { model with Step = n }, Cmd.none
         | TimerToggled on -> { model with TimerOn = on }, (if on then timerCmd else Cmd.none)
         | TimedTick -> 
