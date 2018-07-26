@@ -43,20 +43,22 @@ module App =
                 { model with Count = model.Count + model.Step }, timerCmd
             else 
                 model, Cmd.none
-
+    let toN s = 
+        match System.Int32.TryParse s with
+        | true, i -> Some i
+        | _ -> None
     let view (model: Model) dispatch =
-        let toN s = 
-            match System.Int32.TryParse s with
-            | true, i -> Some i
-            | _ -> None
+        let onTxtChg (arg: Syncfusion.XForms.MaskedEdit.ValueChangedEventArgs) =
+            toN (arg.Value.ToString()) 
+            |> Option.map(fun r -> if r = model.Count then None else Some r)
+            |> Option.flatten
+            |> Option.iter (SetCounter >> dispatch)
+        
         View.ContentPage(
           content = View.StackLayout(padding = 20.0, verticalOptions = LayoutOptions.Center,
             children = [ 
-                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000,000" , 
-                    valueChg = (fun arg -> 
-                        toN (arg.Value.ToString()) 
-                        |> Option.iter (SetCounter >> dispatch)) 
-                        , horizontalOptions = LayoutOptions.CenterAndExpand)
+                View.SfMaskedEdit(value = model.Count.ToString(), mask = "000" , 
+                    valueChg = onTxtChg, horizontalOptions = LayoutOptions.CenterAndExpand)
                 View.Label(text = sprintf "%d" model.Count, horizontalOptions = LayoutOptions.Center, fontSize = "Large")
                 View.Button(text = "Increment", command = (fun () -> dispatch Increment), horizontalOptions = LayoutOptions.Center)
                 View.Button(text = "Decrement", command = (fun () -> dispatch Decrement), horizontalOptions = LayoutOptions.Center)
